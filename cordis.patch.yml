@@ -1,0 +1,55 @@
+# DSH bundle patch — dsh-im-global
+#
+# The foreign-IM half of the channel set: one plugin, a `channels` list, one
+# adapter per platform. Mirrors the domestic gateway's shape
+# (@lijian-ui/dsh-im-gateway) so both halves are configured the same way.
+#
+# Channels that need no public URL:
+#   discord  Gateway WebSocket + REST
+#   slack    Socket Mode + Web API (needs bot *and* app-level token)
+#   matrix   client-server /sync long polling
+#
+# COEXISTENCE: one bot account must be mounted exactly once. Two clients on the
+# same token both receive every event, so a duplicate mounting double-answers.
+
+- insert:
+    - id: im-global
+      name: dsh-im-global
+      # Startup-critical services only. `ctx.get()` returns undefined while a
+      # providing fiber is still inactive, so anything read during boot — above
+      # all `credentials`, which holds the tokens — must be declared here.
+      inject:
+        - agents
+        - llm
+        - credentials
+        - userQuestions
+        - agentDefaultModel
+        - attachments
+        - workspaceRegistry
+      config:
+        enabled: true
+        streaming: true
+        showToolActivity: true
+        # Each channel names the credential holding its token; the token itself
+        # never appears here.
+        channels:
+          - id: discord-main
+            type: discord
+            name: Discord
+            enabled: true
+            tokenRef: DISCORD_BOT_TOKEN
+            # cwd: /Users/you/dev/workspace
+
+          - id: slack-main
+            type: slack
+            name: Slack
+            enabled: false
+            tokenRef: SLACK_BOT_TOKEN
+            appTokenRef: SLACK_APP_TOKEN
+
+          - id: matrix-main
+            type: matrix
+            name: Matrix
+            enabled: false
+            tokenRef: MATRIX_ACCESS_TOKEN
+            homeserverUrl: https://matrix.org
