@@ -5,6 +5,7 @@
 # (@lijian-ui/dsh-im-gateway) so both halves are configured the same way.
 #
 # Channels that need no public URL:
+#   telegram Bot API long polling
 #   discord  Gateway WebSocket + REST
 #   slack    Socket Mode + Web API (needs bot *and* app-level token)
 #   matrix   client-server /sync long polling
@@ -33,6 +34,12 @@
         # Each channel names the credential holding its token; the token itself
         # never appears here.
         channels:
+          - id: telegram-main
+            type: telegram
+            name: Telegram
+            enabled: true
+            tokenRef: TELEGRAM_BOT_TOKEN
+
           - id: discord-main
             type: discord
             name: Discord

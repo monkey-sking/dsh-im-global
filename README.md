@@ -1,6 +1,6 @@
 # dsh-im-global
 
-**Foreign-IM channel set for DeepSeek Harness** — Discord, Slack and Matrix in one plugin, with per-conversation sessions that survive restarts.
+**Foreign-IM channel set for DeepSeek Harness** — Telegram, Discord, Slack and Matrix in one plugin, with per-conversation sessions that survive restarts.
 
 This is the foreign counterpart of the domestic gateway
 ([`@lijian-ui/dsh-im-gateway`](https://www.npmjs.com/package/@lijian-ui/dsh-im-gateway),
@@ -20,6 +20,7 @@ lib/index.js            plugin: config, channel lifecycle, routing, commands
 lib/core/bindings.js    conversation -> session (durable, restart-safe)
 lib/core/reply.js       turn -> message delivery (streaming, platform-agnostic)
 lib/core/commands.js    /new /status /help parsing
+lib/adapters/telegram.js Bot API long polling
 lib/adapters/discord.js Gateway WebSocket + REST
 lib/adapters/slack.js   Socket Mode + Web API
 lib/adapters/matrix.js  client-server /sync long polling
@@ -31,6 +32,7 @@ Adding a platform is one adapter file. Nothing in `core/` changes.
 
 | type | inbound | needs a public URL? | credentials |
 |---|---|---|---|
+| `telegram` | Bot API long polling | no | bot token (`@BotFather`) |
 | `discord` | Gateway WebSocket | no | bot token |
 | `slack` | Socket Mode WebSocket | no | bot token `xoxb-…` + app token `xapp-…` |
 | `matrix` | `/sync` long polling | no | access token (+ homeserver URL) |
@@ -65,6 +67,7 @@ names the channel references:
 
 | platform | default credential | what to paste |
 |---|---|---|
+| Telegram | `TELEGRAM_BOT_TOKEN` | BotFather → `/newbot` → the token it prints |
 | Discord | `DISCORD_BOT_TOKEN` | Bot → Token (Developer Portal → Bot → Reset Token) |
 | Slack | `SLACK_BOT_TOKEN` | OAuth & Permissions → Bot User OAuth Token (`xoxb-…`) |
 | Slack | `SLACK_APP_TOKEN` | Basic Information → App-Level Tokens (`xapp-…`, scope `connections:write`) |
@@ -76,6 +79,9 @@ Then edit the `im-global` row in the profile's `cordis.patch.yml`:
 - id: im-global
   config:
     channels:
+      - id: telegram-main
+        type: telegram
+        tokenRef: TELEGRAM_BOT_TOKEN
       - id: discord-main
         type: discord
         tokenRef: DISCORD_BOT_TOKEN
@@ -89,6 +95,22 @@ Then edit the `im-global` row in the profile's `cordis.patch.yml`:
         tokenRef: MATRIX_ACCESS_TOKEN
         homeserverUrl: https://matrix.org
 ```
+
+### Telegram specifics
+
+- Create the bot with [@BotFather](https://t.me/BotFather) and copy the token.
+- **Only one process may long-poll a token.** A second `getUpdates` gets
+  409 Conflict, so disable any other Telegram channel on the same bot before
+  starting this one (the profile patch does that with
+  `- id: telegram` / `disabled: true`).
+- Coming from another Telegram plugin? Carry the conversation over:
+
+  ```
+  node scripts/migrate-telegram-bindings.mjs telegram-main
+  ```
+
+  It copies the old `chat -> session` mapping, so the same chat resumes the
+  same Harness session instead of starting from zero.
 
 ### Discord specifics
 

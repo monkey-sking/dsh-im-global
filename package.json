@@ -1,6 +1,6 @@
 {
   "name": "dsh-im-global",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Foreign-IM channel set for DeepSeek Harness — Discord / Slack / Matrix in one plugin: durable per-conversation sessions, streaming replies, platform-correct markdown.",
