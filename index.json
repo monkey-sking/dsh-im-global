@@ -30,12 +30,12 @@
     {
       "name": "dsh-im-global",
       "title": {
-        "en": "IM Global (Discord / Slack / Matrix)",
-        "zh": "国外 IM 通道（Discord / Slack / Matrix）"
+        "en": "IM Global (Telegram / Discord / Slack / Matrix)",
+        "zh": "国外 IM 通道（TG / Discord / Slack / Matrix）"
       },
       "description": {
-        "en": "Foreign-IM channel set for DeepSeek Harness: Discord (Gateway WebSocket), Slack (Socket Mode) and Matrix (/sync) in one plugin. Per-conversation sessions survive restarts, replies stream by editing one message in place, and each platform gets its own markdown dialect. No public callback URL needed.",
-        "zh": "DeepSeek Harness 的国外 IM 通道集合：一个插件接入 Discord（Gateway WebSocket）、Slack（Socket Mode）与 Matrix（/sync 长轮询）。会话按频道持久化、重启后自动接回，回答流式编辑同一条消息，并按平台转成正确的 markdown 方言。全程不需要公网回调地址。"
+        "en": "Foreign-IM channel set for DeepSeek Harness: Telegram (Bot API long polling), Discord (Gateway WebSocket), Slack (Socket Mode) and Matrix (/sync) in one plugin. Per-conversation sessions survive restarts, replies stream by editing one message in place, and each platform gets its own markdown dialect. No public callback URL needed.",
+        "zh": "DeepSeek Harness 的国外 IM 通道集合：一个插件接入 Telegram（长轮询）、Discord（Gateway WebSocket）、Slack（Socket Mode）与 Matrix（/sync）。会话按频道持久化、重启后自动接回，回答流式编辑同一条消息，并按平台转成正确的 markdown 方言。全程不需要公网回调地址。"
       },
       "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IklNIEdsb2JhbCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzFmMjkzNyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwYjEyMjAiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHg9IjIiIHk9IjIiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcng9IjE0IiBmaWxsPSJ1cmwoI2JnKSIvPgogIDxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjE3IiBmaWxsPSJub25lIiBzdHJva2U9IiMzOGJkZjgiIHN0cm9rZS13aWR0aD0iMi41IiBvcGFjaXR5PSIwLjg1Ii8+CiAgPGVsbGlwc2UgY3g9IjMwIiBjeT0iMzAiIHJ4PSI3LjUiIHJ5PSIxNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMzhiZGY4IiBzdHJva2Utd2lkdGg9IjEuOCIgb3BhY2l0eT0iMC43Ii8+CiAgPHBhdGggZD0iTTEzIDMwaDM0TTE1IDIyaDMwTTE1IDM4aDMwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzOGJkZjgiIHN0cm9rZS13aWR0aD0iMS42IiBvcGFjaXR5PSIwLjU1Ii8+CiAgPHBhdGggZD0iTTM4IDM0aDEyYTQgNCAwIDAgMSA0IDR2NmE0IDQgMCAwIDEtNCA0aC02bC01IDR2LTRoLTFhNCA0IDAgMCAxLTQtNHYtNmE0IDQgMCAwIDEgNC00eiIgZmlsbD0iIzBiMTIyMCIgc3Ryb2tlPSIjMjJjNTVlIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxjaXJjbGUgY3g9IjQxIiBjeT0iNDEiIHI9IjEuNCIgZmlsbD0iIzIyYzU1ZSIvPgogIDxjaXJjbGUgY3g9IjQ1LjUiIGN5PSI0MSIgcj0iMS40IiBmaWxsPSIjMjJjNTVlIi8+CiAgPGNpcmNsZSBjeD0iNTAiIGN5PSI0MSIgcj0iMS40IiBmaWxsPSIjMjJjNTVlIi8+Cjwvc3ZnPgo=",
       "author": "monkey-sking",
@@ -46,6 +46,7 @@
       "metadata": {
         "category": "channels",
         "keywords": [
+          "telegram",
           "discord",
           "slack",
           "matrix",
@@ -58,12 +59,12 @@
       },
       "versions": [
         {
-          "version": "0.1.0",
-          "publishTimestamp": 1792526106,
+          "version": "0.2.0",
+          "publishTimestamp": 1792530114,
           "source": {
             "type": "git",
             "url": "https://github.com/monkey-sking/dsh-im-global",
-            "commit": "c63913bb48d6901c0589abd60d482be81244a244"
+            "commit": "3123ce89f855e2b177e2e26cc8ebc952d931f0f4"
           },
           "engines": {
             "dsh": ">=0.2.0-rc.2"
