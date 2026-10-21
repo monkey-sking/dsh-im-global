@@ -1,9 +1,9 @@
 {
   "name": "dsh-im-global",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "type": "module",
-  "description": "Foreign-IM channel set for DeepSeek Harness — Discord / Slack / Matrix in one plugin: durable per-conversation sessions, streaming replies, platform-correct markdown.",
+  "description": "Global IM channels for DeepSeek Harness — Telegram, Discord, Slack, Mattermost, Zulip and Matrix in one plugin, with a Settings page (add / test / save channels, live reload), per-conversation sessions that survive restarts, and platform-correct markdown.",
   "keywords": [
     "dsh",
     "deepseek-harness",
@@ -42,6 +42,8 @@
       "platform": "web",
       "inject": [
         "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
         "@deepseek-ai/dsh-client-ui-settings"
       ]
     }

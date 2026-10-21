@@ -1,6 +1,6 @@
 # DSH bundle patch — dsh-im-global
 #
-# The foreign-IM half of the channel set: one plugin, a `channels` list, one
+# Global IM channels: one plugin, a `channels` list, one
 # adapter per platform. Mirrors the domestic gateway's shape
 # (@lijian-ui/dsh-im-gateway) so both halves are configured the same way.
 #

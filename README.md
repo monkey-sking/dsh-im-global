@@ -1,11 +1,10 @@
 # dsh-im-global
 
-**Foreign-IM channel set for DeepSeek Harness** — Telegram, Discord, Slack, Mattermost, Zulip and Matrix in one plugin, with per-conversation sessions that survive restarts.
+**Global IM channels for DeepSeek Harness** — Telegram, Discord, Slack, Mattermost, Zulip and Matrix in one plugin, with per-conversation sessions that survive restarts.
 
-This is the foreign counterpart of the domestic gateway
-([`@lijian-ui/dsh-im-gateway`](https://www.npmjs.com/package/@lijian-ui/dsh-im-gateway),
-DingTalk / QQ / WeChat / Feishu / WeCom). Both halves share the same shape: one
-plugin, a `channels: [...]` list, one adapter per platform.
+It shares its shape with the DingTalk / QQ / WeChat / Feishu / WeCom gateway
+([`@lijian-ui/dsh-im-gateway`](https://www.npmjs.com/package/@lijian-ui/dsh-im-gateway)):
+one plugin, a `channels: [...]` list, one adapter per platform.
 
 ## Why this exists
 
@@ -67,7 +66,7 @@ The bundle inserts one row, `im-global`, into the profile composition.
 
 ### Settings page (no YAML, no restart)
 
-Enable the bundle once, then use **Settings → 国外 IM 通道**. The page manages the
+Enable the bundle once, then open **Settings → Chat channels**. The page manages the
 channel list: add/remove a channel, pick its type, name the credential, set the
 server URL, **test** the credential against the platform, and save. Saving
 restarts the affected channels in place — the process is not restarted.
