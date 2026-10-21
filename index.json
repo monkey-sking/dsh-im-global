@@ -59,12 +59,12 @@
       },
       "versions": [
         {
-          "version": "0.5.1",
-          "publishTimestamp": 1792548336,
+          "version": "0.6.0",
+          "publishTimestamp": 1792551654,
           "source": {
             "type": "git",
             "url": "https://github.com/monkey-sking/dsh-im-global",
-            "commit": "302a006df1f721380a6fb34e6fd02fde50f86788"
+            "commit": "3c647029ccb8c849bc0559c4ea238c4934d18102"
           },
           "engines": {
             "dsh": ">=0.2.0-rc.2"
