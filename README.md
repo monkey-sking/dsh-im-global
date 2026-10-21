@@ -63,6 +63,24 @@ plugin_manager({ action: "install_bundle", target: "/Users/you/.local/share/dsh-
 
 The bundle inserts one row, `im-global`, into the profile composition.
 
+## Configure (two ways)
+
+### Settings page (no YAML, no restart)
+
+Enable the bundle once, then use **Settings → 国外 IM 通道**. The page manages the
+channel list: add/remove a channel, pick its type, name the credential, set the
+server URL, **test** the credential against the platform, and save. Saving
+restarts the affected channels in place — the process is not restarted.
+
+Credentials are never edited there. The page only stores the credential *name*;
+the secret stays in the credential store.
+
+### `cordis.patch.yml`
+
+`## Configure` below documents the file-based route, which stays the floor: a
+value pinned there is used until the settings page saves a channel list of its
+own.
+
 ## Configure
 
 Tokens live in `ctx.credentials`, never in the config file. Create them first —
@@ -101,6 +119,12 @@ Then edit the `im-global` row in the profile's `cordis.patch.yml`:
         tokenRef: MATRIX_ACCESS_TOKEN
         homeserverUrl: https://matrix.org
 ```
+
+### Settings storage
+
+The page writes `~/.dsh/dsh-im-global/settings.json` (atomic temp-file + rename).
+When that file exists its `channels` list wins over the composition's; delete it
+to fall back to `cordis.patch.yml`.
 
 ### Telegram specifics
 

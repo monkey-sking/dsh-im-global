@@ -1,6 +1,6 @@
 {
   "name": "dsh-im-global",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Foreign-IM channel set for DeepSeek Harness — Discord / Slack / Matrix in one plugin: durable per-conversation sessions, streaming replies, platform-correct markdown.",
@@ -18,14 +18,18 @@
   "main": "./lib/index.js",
   "exports": {
     ".": "./lib/index.js",
-    "./markdown": "./lib/markdown.js",
-    "./api": "./lib/api.js",
+    "./client": "./lib/client.js",
+    "./markdown": "./lib/format.js",
+    "./api": "./lib/discord/api.js",
     "./package.json": "./package.json"
   },
   "files": [
     "lib",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "index.json",
+    "icon.svg",
+    "scripts"
   ],
   "engines": {
     "node": ">=20"
@@ -33,6 +37,13 @@
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
     }
   },
   "scripts": {
