@@ -215,13 +215,14 @@ so "这个怎么改" has a referent:
 |---|---|---|
 | Telegram | `reply_to_message` (full message) | ✅ inline |
 | Discord | `referenced_message` (full message) | ✅ inline |
-| Slack | not inlined; `thread_ts` points at the parent | ⏳ thread only |
-| Matrix | needs a `/context` call per reply | ⏳ not yet |
-| Mattermost | `root_id` (thread root) | ⏳ thread only |
-| Zulip | topic + quote block in the body | ⏳ topic only |
+| Slack | not inlined; `thread_ts` → `conversations.replies` | ✅ thread parent (1 call, cached 2 min) |
+| Matrix | event id only; `m.in_reply_to` → `/context` | ✅ exact quoted event (cached 2 min) |
+| Mattermost | `root_id` → `GET /posts/{id}` | ✅ thread root (cached 2 min) |
+| Zulip | markdown blockquote in the body | ✅ parsed inline, no extra call |
 
-Nothing is fetched retroactively: an adapter only sends what the platform
-already put in the update, so quoting never adds a round trip.
+Telegram, Discord and Zulip need no extra request. Slack, Matrix and Mattermost
+fetch the referenced message once and cache it for two minutes, because their
+protocols only carry an id.
 
 ## Interactive questions
 
