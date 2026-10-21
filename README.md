@@ -200,6 +200,27 @@ platform lets the adapter download them.
   headings become bold, mass mentions are neutralized — a raw pipe table on a
   phone reads as corruption.
 
+## Reliability notes
+
+Four failure modes are handled explicitly, because each one looked like "the bot
+is broken" from the chat side:
+
+- **Archived session.** The kernel rejects every step of an archived session
+  (`archived-session-gate`), which surfaces as a `blocked` turn: the message is
+  accepted and answered with silence. The channel detects that, unarchives the
+  session, and falls back to a fresh session only if unarchiving is refused.
+- **Long tool-using turns.** This harness publishes finished step messages
+  rather than raw deltas, so the streaming preview is driven from both. Without
+  that a multi-step turn shows nothing until it ends.
+- **Plugin reloads.** The disposer is registered synchronously and marks the
+  instance dead before stopping adapters. An async effect hands cordis its
+  disposer only after startup resolves, so a reload during startup left the old
+  poller alive: two pollers on one bot token fight over `getUpdates` (409
+  Conflict) and silently eat each other's messages.
+- **Missing model wiring.** `agentOptions` alone leaves the agent without a
+  provider/model at prompt assembly time; `installModelSelection` couples it to
+  both assembly and request routing. Without it a turn ends in milliseconds.
+
 ## Test
 
 ```
