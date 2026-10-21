@@ -1,6 +1,6 @@
 # dsh-im-global
 
-**Foreign-IM channel set for DeepSeek Harness** — Telegram, Discord, Slack and Matrix in one plugin, with per-conversation sessions that survive restarts.
+**Foreign-IM channel set for DeepSeek Harness** — Telegram, Discord, Slack, Mattermost, Zulip and Matrix in one plugin, with per-conversation sessions that survive restarts.
 
 This is the foreign counterpart of the domestic gateway
 ([`@lijian-ui/dsh-im-gateway`](https://www.npmjs.com/package/@lijian-ui/dsh-im-gateway),
@@ -23,6 +23,8 @@ lib/core/commands.js    /new /status /help parsing
 lib/adapters/telegram.js Bot API long polling
 lib/adapters/discord.js Gateway WebSocket + REST
 lib/adapters/slack.js   Socket Mode + Web API
+lib/adapters/mattermost.js WebSocket + REST (self-hosted)
+lib/adapters/zulip.js   event-queue long polling
 lib/adapters/matrix.js  client-server /sync long polling
 ```
 
@@ -36,6 +38,8 @@ Adding a platform is one adapter file. Nothing in `core/` changes.
 | `discord` | Gateway WebSocket | no | bot token |
 | `slack` | Socket Mode WebSocket | no | bot token `xoxb-…` + app token `xapp-…` |
 | `matrix` | `/sync` long polling | no | access token (+ homeserver URL) |
+| `mattermost` | WebSocket + REST | no | personal access token + base URL |
+| `zulip` | event-queue long polling | no | `<bot email>:<api key>` + base URL |
 
 WhatsApp / Teams / LINE / Messenger are **not** covered: they only deliver events
 to a public HTTPS callback, which is a different hosting shape rather than
@@ -72,6 +76,8 @@ names the channel references:
 | Slack | `SLACK_BOT_TOKEN` | OAuth & Permissions → Bot User OAuth Token (`xoxb-…`) |
 | Slack | `SLACK_APP_TOKEN` | Basic Information → App-Level Tokens (`xapp-…`, scope `connections:write`) |
 | Matrix | `MATRIX_ACCESS_TOKEN` | any account's access token |
+| Mattermost | `MATTERMOST_TOKEN` | Profile → Security → Personal Access Tokens |
+| Zulip | `ZULIP_BOT_TOKEN` | `<bot email>:<api key>` from Settings → Bots |
 
 Then edit the `im-global` row in the profile's `cordis.patch.yml`:
 
@@ -111,6 +117,15 @@ Then edit the `im-global` row in the profile's `cordis.patch.yml`:
 
   It copies the old `chat -> session` mapping, so the same chat resumes the
   same Harness session instead of starting from zero.
+
+### Mattermost / Zulip specifics
+
+- Both are self-hosted, so `baseUrl` is required (`https://chat.example.com`).
+- Mattermost needs a **personal access token** and the socket authenticates with
+  it; the adapter pings every 30 s because the socket goes quiet otherwise.
+- Zulip's event queue expires on its own schedule; `BAD_EVENT_QUEUE_ID` is
+  handled by re-registering rather than surfacing an error.
+- Zulip replies go to the same stream and topic; a DM replies to the sender.
 
 ### Discord specifics
 

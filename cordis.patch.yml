@@ -6,6 +6,8 @@
 #
 # Channels that need no public URL:
 #   telegram Bot API long polling
+#   mattermost WebSocket + REST (self-hosted)
+#   zulip    event-queue long polling
 #   discord  Gateway WebSocket + REST
 #   slack    Socket Mode + Web API (needs bot *and* app-level token)
 #   matrix   client-server /sync long polling
@@ -53,6 +55,21 @@
             enabled: false
             tokenRef: SLACK_BOT_TOKEN
             appTokenRef: SLACK_APP_TOKEN
+
+          - id: mattermost-main
+            type: mattermost
+            name: Mattermost
+            enabled: false
+            tokenRef: MATTERMOST_TOKEN
+            baseUrl: https://chat.example.com
+
+          - id: zulip-main
+            type: zulip
+            name: Zulip
+            enabled: false
+            # Credential value is "<bot email>:<api key>".
+            tokenRef: ZULIP_BOT_TOKEN
+            baseUrl: https://chat.example.com
 
           - id: matrix-main
             type: matrix
