@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { DiscordAdapter } from '../lib/adapters/discord.js';
 import { SlackAdapter } from '../lib/adapters/slack.js';
 import { MatrixAdapter } from '../lib/adapters/matrix.js';
+import { TelegramAdapter } from '../lib/adapters/telegram.js';
 
 const logger = { info() {}, warn() {}, error() {} };
 
@@ -98,4 +99,34 @@ test('matrix sync yields peer messages only', () => {
   assert.equal(seen.length, 1);
   assert.equal(seen[0].text, '你好');
   assert.equal(seen[0].convId, '!room:example.org');
+});
+
+test('telegram carries the quoted message into the model input', () => {
+  const seen = [];
+  const adapter = new TelegramAdapter({ id: 't', logger, config: {}, onMessage: (m) => seen.push(m) });
+  adapter.botUserId = 111;
+  adapter.dispatchUpdate({
+    update_id: 1,
+    message: {
+      message_id: 9,
+      chat: { id: 42, type: 'private' },
+      from: { id: 7, username: 'alice' },
+      text: '这个怎么改',
+      reply_to_message: {
+        message_id: 8,
+        from: { id: 111, username: 'bot', is_bot: true },
+        text: '配置文件在 ~/.dsh/ 下面',
+      },
+    },
+  });
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0].repliedTo.text, '配置文件在 ~/.dsh/ 下面');
+  assert.equal(seen[0].repliedTo.isBot, true);
+  assert.match(adapter.quotedContext(seen[0]), /^\[引用 你 的消息\]/);
+});
+
+test('no quote means no prefix', () => {
+  const adapter = new TelegramAdapter({ id: 't', logger, config: {}, onMessage() {} });
+  assert.equal(adapter.quotedContext({ repliedTo: undefined }), undefined);
+  assert.equal(adapter.quotedContext({ repliedTo: { text: '' } }), undefined);
 });

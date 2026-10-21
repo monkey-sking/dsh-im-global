@@ -200,6 +200,29 @@ platform lets the adapter download them.
   headings become bold, mass mentions are neutralized — a raw pipe table on a
   phone reads as corruption.
 
+## Quoted messages
+
+A reply that quotes an earlier message is passed to the model as a short prefix,
+so "这个怎么改" has a referent:
+
+```
+[引用 你 的消息]
+> 配置文件在 ~/.dsh/ 下面
+这个怎么改
+```
+
+| Platform | Quoted content on the wire | Status |
+|---|---|---|
+| Telegram | `reply_to_message` (full message) | ✅ inline |
+| Discord | `referenced_message` (full message) | ✅ inline |
+| Slack | not inlined; `thread_ts` points at the parent | ⏳ thread only |
+| Matrix | needs a `/context` call per reply | ⏳ not yet |
+| Mattermost | `root_id` (thread root) | ⏳ thread only |
+| Zulip | topic + quote block in the body | ⏳ topic only |
+
+Nothing is fetched retroactively: an adapter only sends what the platform
+already put in the update, so quoting never adds a round trip.
+
 ## Interactive questions
 
 When the agent asks (`ask_user_question`), the question is answered **in the
