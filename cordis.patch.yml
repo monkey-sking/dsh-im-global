@@ -45,7 +45,7 @@
           - id: discord-main
             type: discord
             name: Discord
-            enabled: true
+            enabled: false
             tokenRef: DISCORD_BOT_TOKEN
             # cwd: /Users/you/dev/workspace
 
