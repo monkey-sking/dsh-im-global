@@ -200,6 +200,32 @@ platform lets the adapter download them.
   headings become bold, mass mentions are neutralized — a raw pipe table on a
   phone reads as corruption.
 
+## Interactive questions
+
+When the agent asks (`ask_user_question`), the question is answered **in the
+chat** instead of only in the Web UI: the harness exposes questions through the
+`user-questions/request` waterfall, and this channel claims the ones belonging
+to its own sessions (anything else falls through to the Web UI).
+
+Platform support for interactive answers:
+
+| Platform | Native controls it offers | In this plugin |
+|---|---|---|
+| Telegram | Inline keyboards (callback buttons, URL buttons, web_app). Rows ≤8, ≤100 buttons | ✅ **Buttons** — `callback_query` + `answerCallbackQuery`, keyboard collapsed after the answer |
+| Discord | Message components: buttons (≤5/row, ≤25/message), select menus, modals. Replies need an interaction ACK within 3 s | ⏳ Text fallback (`1) … 2) …`) |
+| Slack | Block Kit actions: buttons (≤25/block), select menus, overflow, modals. Arrives over Socket Mode — no public URL | ⏳ Text fallback |
+| Mattermost | Interactive message attachments (`actions`), but the click posts to an integration URL | ⏳ Text fallback |
+| Matrix | No buttons; emoji reactions or plain text | ⏳ Text fallback |
+| Zulip | No buttons; reactions and plain text | ⏳ Text fallback |
+
+The text fallback works everywhere and needs nothing from the platform: the
+question is posted numbered, and a reply of `2` (or the option label) answers it.
+While a question is open it owns the next message — typing `2` answers instead of
+starting a new turn.
+
+Approvals (`user-approval`) are a separate service and are **not** routed to chat
+yet; a tool that needs approval still surfaces in the Web UI.
+
 ## Reliability notes
 
 Four failure modes are handled explicitly, because each one looked like "the bot
