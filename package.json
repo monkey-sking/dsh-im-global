@@ -1,6 +1,6 @@
 {
   "name": "dsh-im-global",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "type": "module",
   "description": "Global IM channels for DeepSeek Harness — Telegram, Discord, Slack, Mattermost, Zulip and Matrix in one plugin, with a Settings page (add / test / save channels, live reload), per-conversation sessions that survive restarts, and platform-correct markdown.",
@@ -47,7 +47,8 @@
     }
   },
   "scripts": {
-    "test": "node --test 'test/*.test.js'"
+    "test": "node --test 'test/*.test.js'",
+    "smoke": "node scripts/smoke-adapters.mjs"
   },
   "dependencies": {
     "ws": "^8.18.0"
