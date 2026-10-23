@@ -74,6 +74,14 @@ restarts the affected channels in place — the process is not restarted.
 Credentials are never edited there. The page only stores the credential *name*;
 the secret stays in the credential store.
 
+#### Saving a token directly (builds without a credentials page)
+
+Each channel card also has a **Token（可选，直接保存）** field. Paste the token and
+press **保存 token** — the plugin writes it to `~/.dsh/dsh-im-global/secrets.json`
+(mode 0600) and resolves it as a fallback after `ctx.credentials` and the
+environment variable of the same name. Useful when the host has no credentials UI:
+the channel then starts without touching the host credential store.
+
 ### `cordis.patch.yml`
 
 `## Configure` below documents the file-based route, which stays the floor: a
