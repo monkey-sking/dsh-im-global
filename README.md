@@ -2,6 +2,11 @@
 
 **Global IM channels for DeepSeek Harness** — Telegram, Discord, Slack, Mattermost, Zulip and Matrix in one plugin, with per-conversation sessions that survive restarts.
 
+> ⚠️ **Security: closed by default.** A channel with no allowlist configured
+> rejects every message (fail-closed) and shows as locked until you add the
+> sender's user ids. See [Security: the allowlist is fail-closed](#security-the-allowlist-is-fail-closed)
+> before connecting a bot.
+
 It shares its shape with the DingTalk / QQ / WeChat / Feishu / WeCom gateway
 ([`@lijian-ui/dsh-im-gateway`](https://www.npmjs.com/package/@lijian-ui/dsh-im-gateway)):
 one plugin, a `channels: [...]` list, one adapter per platform.
@@ -132,6 +137,37 @@ Then edit the `im-global` row in the profile's `cordis.patch.yml`:
 The page writes `~/.dsh/dsh-im-global/settings.json` (atomic temp-file + rename).
 When that file exists its `channels` list wins over the composition's; delete it
 to fall back to `cordis.patch.yml`.
+
+### Security: the allowlist is fail-closed
+
+A chat bridge turns anyone who can reach the bot into an agent driver, so this
+plugin is **closed by default**. A channel with no allowlist configured accepts
+nothing — not even the owner — and shows as **locked** on the Settings page with
+every inbound message dropped and logged.
+
+To open a channel, put the sender's platform user ids on the list, either in the
+Settings page (**允许的用户 id** field, comma separated) or in the composition:
+
+```yaml
+- id: im-global
+  config:
+    allowedUsers: [123456789]          # plugin-level default for every channel
+    channels:
+      - id: telegram-main
+        type: telegram
+        tokenRef: TELEGRAM_BOT_TOKEN
+        allowedUsers: [987654321]      # per-channel list beats the plugin-level
+```
+
+A per-channel `allowedUsers` wins; otherwise the plugin-level `allowedUsers`
+applies; if neither is set the channel stays locked. How to find a user id:
+Telegram = the numeric id a bot sees, Discord = the numeric snowflake, Slack =
+the member id, Matrix = the full `@user:server`, Mattermost/Zulip = the numeric
+user id. The bot reads them from the `userId` it logs per inbound message.
+
+This is the *only* gate between the platform and your agent. Treat it like a
+firewall rule: configure it before exposing a bot, and keep it populated as you
+add users.
 
 ### Telegram specifics
 
