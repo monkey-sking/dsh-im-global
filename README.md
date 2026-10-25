@@ -169,6 +169,14 @@ This is the *only* gate between the platform and your agent. Treat it like a
 firewall rule: configure it before exposing a bot, and keep it populated as you
 add users.
 
+The gate covers **both** ways a chat can drive the agent:
+
+- a typed message, checked in the router before any session work;
+- a **button press** answering a pending question, checked in the adapter before
+  the choice is emitted. A press from an off-list sender is refused with
+  "你不在允许名单上，无法回答" and never reaches the question broker — otherwise
+  anyone in a group could answer for the owner just by seeing the keyboard.
+
 ### Telegram specifics
 
 - Create the bot with [@BotFather](https://t.me/BotFather) and copy the token.

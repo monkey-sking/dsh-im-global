@@ -44,6 +44,65 @@ test('telegram dispatch normalizes a private message', () => {
   assert.equal(seen.length, 1);
 });
 
+test('telegram ignores a button press from a sender off the allowlist', () => {
+  const choices = [];
+  const answered = [];
+  const adapter = new TelegramAdapter({
+    id: 't',
+    logger,
+    config: {},
+    onChoice: (payload) => choices.push(payload),
+    isAllowed: (userId) => userId === '111',
+  });
+  adapter.api = {
+    async answerCallbackQuery(params) {
+      answered.push(params);
+      return true;
+    },
+  };
+
+  adapter.dispatchUpdate({
+    update_id: 1,
+    callback_query: {
+      id: 'cb-1',
+      from: { id: 7, username: 'mallory' },
+      data: 'q|0',
+      message: { message_id: 5, chat: { id: 42, type: 'group' } },
+    },
+  });
+
+  assert.equal(choices.length, 0, 'an off-list press must not reach the broker');
+  assert.equal(answered.length, 1, 'the press is acknowledged so the spinner stops');
+  assert.match(String(answered[0].text), /允许名单/);
+
+  adapter.dispatchUpdate({
+    update_id: 2,
+    callback_query: {
+      id: 'cb-2',
+      from: { id: 111, username: 'owner' },
+      data: 'q|1',
+      message: { message_id: 5, chat: { id: 42, type: 'group' } },
+    },
+  });
+
+  assert.equal(choices.length, 1, 'the owner can still answer');
+  assert.equal(choices[0].index, 1);
+  assert.equal(choices[0].userId, '111');
+});
+
+test('telegram denies button presses when no allowlist predicate is injected', () => {
+  const choices = [];
+  const adapter = new TelegramAdapter({ id: 't', logger, config: {}, onChoice: (p) => choices.push(p) });
+  adapter.api = { async answerCallbackQuery() { return true; } };
+
+  adapter.dispatchUpdate({
+    update_id: 1,
+    callback_query: { id: 'cb', from: { id: 1 }, data: 'q|0', message: { message_id: 5, chat: { id: 42 } } },
+  });
+
+  assert.equal(choices.length, 0, 'the default predicate denies (fail-closed)');
+});
+
 test('telegram poll advances the offset after dispatching', async () => {
   const offsets = [];
   const adapter = new TelegramAdapter({
@@ -60,7 +119,10 @@ test('telegram poll advances the offset after dispatching', async () => {
       return [{ update_id: 5, message: { message_id: 1, chat: { id: 1 }, from: { id: 2 }, text: 'hi' } }];
     },
   };
-  await adapter.pollLoop();
+  // pollLoop(gen) exits immediately when gen !== this.generation, so pass the
+  // adapter's own generation — calling it bare skips the loop entirely and
+  // asserts on an empty offset list.
+  await adapter.pollLoop(adapter.generation);
   assert.deepEqual(offsets, [0]);
   assert.equal(adapter.offset, 6);
 });
