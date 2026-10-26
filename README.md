@@ -1,5 +1,9 @@
 # dsh-im-global
 
+<!-- badges:start -->
+[![License](https://img.shields.io/github/license/monkey-sking/dsh-im-global?style=flat-square)](https://github.com/monkey-sking/dsh-im-global/blob/main/LICENSE) [![Last commit](https://img.shields.io/github/last-commit/monkey-sking/dsh-im-global?style=flat-square)](https://github.com/monkey-sking/dsh-im-global/commits/main) [![JavaScript](https://img.shields.io/github/languages/top/monkey-sking/dsh-im-global?style=flat-square)](https://github.com/monkey-sking/dsh-im-global/search?l=JavaScript) [![views](https://hits.sh/github.com/monkey-sking/dsh-im-global.svg?style=flat-square&label=views&color=0e75b6)](https://github.com/monkey-sking/dsh-im-global)
+<!-- badges:end -->
+
 **Global IM channels for DeepSeek Harness** — Telegram, Discord, Slack, Mattermost, Zulip and Matrix in one plugin, with per-conversation sessions that survive restarts.
 
 > ⚠️ **Security: closed by default.** A channel with no allowlist configured
