@@ -64,5 +64,8 @@
     "url": "git+https://github.com/monkey-sking/dsh-im-global.git"
   },
   "homepage": "https://github.com/monkey-sking/dsh-im-global#readme",
+  "bugs": {
+    "url": "https://github.com/monkey-sking/dsh-im-global/issues"
+  },
   "author": "monkey-sking"
 }
